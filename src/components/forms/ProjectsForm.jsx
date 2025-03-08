@@ -114,7 +114,7 @@ const ProjectsForm = ({ projects, onChange }) => {
               name="name"
               value={currentProject.name}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
               placeholder="E-commerce Website"
             />
           </div>
@@ -129,7 +129,7 @@ const ProjectsForm = ({ projects, onChange }) => {
               name="url"
               value={currentProject.url}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
               placeholder="https://github.com/yourusername/project"
             />
           </div>
@@ -144,7 +144,7 @@ const ProjectsForm = ({ projects, onChange }) => {
               name="date"
               value={currentProject.date}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
               placeholder="June 2022 (or a date range)"
             />
           </div>
@@ -159,7 +159,7 @@ const ProjectsForm = ({ projects, onChange }) => {
               value={currentProject.description}
               onChange={handleInputChange}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
               placeholder="E-commerce Website description..."
             />
           </div>
@@ -185,7 +185,7 @@ const ProjectsForm = ({ projects, onChange }) => {
             <button
               type="button"
               onClick={handleAddProject}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700  -none focus:ring-2 focus:ring-blue-500"
             >
               {editIndex >= 0 ? 'Update Project' : 'Add Project'}
             </button>

@@ -4,7 +4,15 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
   const { personalInfo, education, experience, skills, projects } = resumeData
 
   return (
-    <div ref={ref} className="bg-white p-8 min-h-[1056px] w-full" style={{ maxWidth: '816px' }}>
+    <div 
+      ref={ref} 
+      className="bg-white p-8 w-full mx-auto pdf-safe" 
+      style={{ 
+        minHeight: '1056px',
+        maxWidth: '816px',
+        boxSizing: 'border-box'
+      }}
+    >
       {/* Header / Personal Info */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">{personalInfo.name || 'Your Name'}</h1>
@@ -13,7 +21,7 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-gray-600">
           {personalInfo.email && (
             <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#4b5563' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
               {personalInfo.email}
@@ -22,7 +30,7 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
           
           {personalInfo.phone && (
             <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#4b5563' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
               {personalInfo.phone}
@@ -31,7 +39,7 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
           
           {personalInfo.location && (
             <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#4b5563' }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
@@ -109,7 +117,7 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
           <h2 className="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-1 mb-2">Skills</h2>
           <div className="flex flex-wrap gap-2">
             {skills.map((skill, index) => (
-              <span key={index} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">
+              <span key={index} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm" style={{ backgroundColor: '#f3f4f6', color: '#1f2937' }}>
                 {skill.name}
               </span>
             ))}
@@ -131,7 +139,7 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
                   </div>
                 </div>
                 {project.url && (
-                  <a href={project.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
+                  <a href={project.url} target="_blank" rel="noopener noreferrer" className="text-sm" style={{ color: '#1e40af' }}>
                     {project.url}
                   </a>
                 )}

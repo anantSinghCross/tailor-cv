@@ -110,7 +110,7 @@ const ExperienceForm = ({ experience, onChange }) => {
                 name="title"
                 value={currentExperience.title}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
                 placeholder="Software Engineer"
               />
             </div>
@@ -125,7 +125,7 @@ const ExperienceForm = ({ experience, onChange }) => {
                 name="company"
                 value={currentExperience.company}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
                 placeholder="Google"
               />
             </div>
@@ -141,7 +141,7 @@ const ExperienceForm = ({ experience, onChange }) => {
               name="location"
               value={currentExperience.location}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
               placeholder="Mountain View, CA"
             />
           </div>
@@ -157,7 +157,7 @@ const ExperienceForm = ({ experience, onChange }) => {
                 name="startDate"
                 value={currentExperience.startDate}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
                 placeholder="Jan 2020"
               />
             </div>
@@ -172,7 +172,7 @@ const ExperienceForm = ({ experience, onChange }) => {
                 name="endDate"
                 value={currentExperience.endDate}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
                 placeholder="Present (leave empty if current)"
               />
             </div>
@@ -188,7 +188,7 @@ const ExperienceForm = ({ experience, onChange }) => {
               value={currentExperience.description}
               onChange={handleInputChange}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
               placeholder="• Developed and maintained web applications using React.js
 • Collaborated with cross-functional teams to implement new features
 • Improved application performance by 30%"
@@ -221,7 +221,7 @@ const ExperienceForm = ({ experience, onChange }) => {
             <button
               type="button"
               onClick={handleAddExperience}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700  -none focus:ring-2 focus:ring-blue-500"
             >
               {editIndex >= 0 ? 'Update Experience' : 'Add Experience'}
             </button>

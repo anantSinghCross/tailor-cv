@@ -110,7 +110,7 @@ const EducationForm = ({ education, onChange }) => {
                 name="school"
                 value={currentEducation.school}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
                 placeholder="Harvard University"
               />
             </div>
@@ -125,7 +125,7 @@ const EducationForm = ({ education, onChange }) => {
                 name="degree"
                 value={currentEducation.degree}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
                 placeholder="Bachelor of Science in Computer Science"
               />
             </div>
@@ -141,7 +141,7 @@ const EducationForm = ({ education, onChange }) => {
               name="location"
               value={currentEducation.location}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
               placeholder="Cambridge, MA"
             />
           </div>
@@ -157,7 +157,7 @@ const EducationForm = ({ education, onChange }) => {
                 name="startDate"
                 value={currentEducation.startDate}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
                 placeholder="Sep 2018"
               />
             </div>
@@ -172,7 +172,7 @@ const EducationForm = ({ education, onChange }) => {
                 name="endDate"
                 value={currentEducation.endDate}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
                 placeholder="May 2022 (or 'Present')"
               />
             </div>
@@ -188,7 +188,7 @@ const EducationForm = ({ education, onChange }) => {
               value={currentEducation.description}
               onChange={handleInputChange}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
               placeholder="Relevant coursework, achievements, etc."
             />
           </div>
@@ -216,7 +216,7 @@ const EducationForm = ({ education, onChange }) => {
             <button
               type="button"
               onClick={handleAddEducation}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700  -none focus:ring-2 focus:ring-blue-500"
             >
               {editIndex >= 0 ? 'Update Education' : 'Add Education'}
             </button>

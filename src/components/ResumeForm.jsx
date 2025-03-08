@@ -17,15 +17,15 @@ const ResumeForm = ({ resumeData, onPersonalInfoChange, onDataChange }) => {
   ]
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full">
       <div className="flex border-b overflow-x-auto">
         {tabs.map(tab => (
           <button
             key={tab.id}
-            className={`px-4 py-3 font-medium text-sm focus:outline-none whitespace-nowrap
+            className={`px-4 py-3 font-medium text-sm  -none whitespace-nowrap
               ${activeTab === tab.id 
-                ? 'border-b-2 border-blue-600 text-blue-600' 
-                : 'text-gray-500 hover:text-gray-700'}`}
+                ? 'border-b-2 border-blue-500 text-blue-500' 
+                : 'text-gray-400 hover:text-gray-600'}`}
             onClick={() => setActiveTab(tab.id)}
           >
             {tab.label}
@@ -33,41 +33,41 @@ const ResumeForm = ({ resumeData, onPersonalInfoChange, onDataChange }) => {
         ))}
       </div>
 
-      <div className="p-6">
-        {activeTab === 'personal' && (
+      <div className="p-6 min-h-[500px]">
+        <div className={activeTab === 'personal' ? 'block' : 'hidden'}>
           <PersonalInfoForm 
             personalInfo={resumeData.personalInfo} 
             onChange={onPersonalInfoChange} 
           />
-        )}
+        </div>
         
-        {activeTab === 'education' && (
+        <div className={activeTab === 'education' ? 'block' : 'hidden'}>
           <EducationForm 
             education={resumeData.education} 
             onChange={(data) => onDataChange('education', data)} 
           />
-        )}
+        </div>
         
-        {activeTab === 'experience' && (
+        <div className={activeTab === 'experience' ? 'block' : 'hidden'}>
           <ExperienceForm 
             experience={resumeData.experience} 
             onChange={(data) => onDataChange('experience', data)} 
           />
-        )}
+        </div>
         
-        {activeTab === 'skills' && (
+        <div className={activeTab === 'skills' ? 'block' : 'hidden'}>
           <SkillsForm 
             skills={resumeData.skills} 
             onChange={(data) => onDataChange('skills', data)} 
           />
-        )}
+        </div>
         
-        {activeTab === 'projects' && (
+        <div className={activeTab === 'projects' ? 'block' : 'hidden'}>
           <ProjectsForm 
             projects={resumeData.projects} 
             onChange={(data) => onDataChange('projects', data)} 
           />
-        )}
+        </div>
       </div>
     </div>
   )
