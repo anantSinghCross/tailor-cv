@@ -18,7 +18,7 @@ const ResumeForm = ({ resumeData, onPersonalInfoChange, onDataChange }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full">
-      <div className="flex border-b overflow-x-auto">
+      <div className="flex border-b border-gray-200 overflow-x-auto">
         {tabs.map(tab => (
           <button
             key={tab.id}

@@ -70,8 +70,7 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  display: block;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -93,4 +92,17 @@ button {
 }
 button:hover {
   border-color: #3b82f6;
+}
+
+/* Add specific styles for the resume preview container */
+.resume-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.resume-page {
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin: 0 auto 2rem auto;
 }
