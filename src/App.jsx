@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
-import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
+import html2canvas from 'html2canvas'
 import ResumeForm from './components/ResumeForm'
 import ResumePreview from './components/ResumePreview'
 import './App.css'
@@ -32,153 +32,257 @@ function App() {
     setIsGeneratingPdf(true)
     
     try {
-      // Create a deep clone of the resume element
-      const resumeElement = resumeRef.current
-      const clone = document.createElement('div')
-      clone.innerHTML = resumeElement.outerHTML
-      const clonedResume = clone.firstChild
-      
-      // Apply inline styles to replace Tailwind classes
-      const applyInlineStyles = (element) => {
-        // Replace text color classes
-        if (element.classList.contains('text-blue-500')) {
-          element.style.color = '#3b82f6'
-          element.classList.remove('text-blue-500')
-        }
-        if (element.classList.contains('text-blue-600')) {
-          element.style.color = '#2563eb'
-          element.classList.remove('text-blue-600')
-        }
-        if (element.classList.contains('text-gray-900')) {
-          element.style.color = '#111827'
-          element.classList.remove('text-gray-900')
-        }
-        if (element.classList.contains('text-gray-800')) {
-          element.style.color = '#1f2937'
-          element.classList.remove('text-gray-800')
-        }
-        if (element.classList.contains('text-gray-700')) {
-          element.style.color = '#374151'
-          element.classList.remove('text-gray-700')
-        }
-        if (element.classList.contains('text-gray-600')) {
-          element.style.color = '#4b5563'
-          element.classList.remove('text-gray-600')
-        }
-        if (element.classList.contains('text-gray-500')) {
-          element.style.color = '#6b7280'
-          element.classList.remove('text-gray-500')
-        }
-        if (element.classList.contains('text-gray-400')) {
-          element.style.color = '#9ca3af'
-          element.classList.remove('text-gray-400')
-        }
-        if (element.classList.contains('text-white')) {
-          element.style.color = '#ffffff'
-          element.classList.remove('text-white')
-        }
-        
-        // Replace background color classes
-        if (element.classList.contains('bg-blue-500')) {
-          element.style.backgroundColor = '#3b82f6'
-          element.classList.remove('bg-blue-500')
-        }
-        if (element.classList.contains('bg-blue-600')) {
-          element.style.backgroundColor = '#2563eb'
-          element.classList.remove('bg-blue-600')
-        }
-        if (element.classList.contains('bg-gray-100')) {
-          element.style.backgroundColor = '#f3f4f6'
-          element.classList.remove('bg-gray-100')
-        }
-        if (element.classList.contains('bg-gray-50')) {
-          element.style.backgroundColor = '#f9fafb'
-          element.classList.remove('bg-gray-50')
-        }
-        if (element.classList.contains('bg-white')) {
-          element.style.backgroundColor = '#ffffff'
-          element.classList.remove('bg-white')
-        }
-        
-        // Replace border color classes
-        if (element.classList.contains('border-blue-500')) {
-          element.style.borderColor = '#3b82f6'
-          element.classList.remove('border-blue-500')
-        }
-        if (element.classList.contains('border-gray-300')) {
-          element.style.borderColor = '#d1d5db'
-          element.classList.remove('border-gray-300')
-        }
-        if (element.classList.contains('border-gray-200')) {
-          element.style.borderColor = '#e5e7eb'
-          element.classList.remove('border-gray-200')
-        }
-        
-        // Process all child elements recursively
-        Array.from(element.children).forEach(child => {
-          applyInlineStyles(child)
-        })
-      }
-      
-      // Apply inline styles to the cloned resume
-      applyInlineStyles(clonedResume)
-      
-      // Set explicit styles for the cloned resume
-      clonedResume.style.backgroundColor = '#ffffff'
-      clonedResume.style.color = '#111827'
-      clonedResume.style.fontFamily = 'system-ui, sans-serif'
-      
-      // Temporarily append the clone to the document
-      document.body.appendChild(clonedResume)
-      clonedResume.style.position = 'absolute'
-      clonedResume.style.left = '-9999px'
-      clonedResume.style.width = '816px' // A4 width in pixels at 96 DPI
-      
-      // Generate canvas from the clone
-      const canvas = await html2canvas(clonedResume, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#FFFFFF',
-        onclone: (document, element) => {
-          // Additional cleanup in the cloned document
-          element.querySelectorAll('*').forEach(el => {
-            // Remove any remaining Tailwind classes that might cause issues
-            if (el.className && typeof el.className === 'string') {
-              el.className = el.className
-                .split(' ')
-                .filter(cls => !cls.includes('text-') && !cls.includes('bg-') && !cls.includes('border-'))
-                .join(' ')
-            }
-          })
-        }
-      })
-      
-      // Remove the clone from the document
-      document.body.removeChild(clonedResume)
-      
-      const imgData = canvas.toDataURL('image/png')
+      // Create a PDF directly using jsPDF without html2canvas
       const pdf = new jsPDF({
         orientation: 'portrait',
-        unit: 'px',
+        unit: 'mm',
         format: 'a4',
       })
       
-      const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pdfHeight = pdf.internal.pageSize.getHeight()
-      const imgWidth = canvas.width
-      const imgHeight = canvas.height
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight)
-      const imgX = (pdfWidth - imgWidth * ratio) / 2
-      const imgY = 0
+      // Set font
+      pdf.setFont('helvetica', 'normal')
       
-      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio)
+      // Add content to PDF
+      addContentToPdf(pdf, resumeData)
+      
+      // Save the PDF
       pdf.save('resume.pdf')
     } catch (error) {
       console.error('Error generating PDF:', error)
       alert('Failed to generate PDF: ' + error.message)
     } finally {
       setIsGeneratingPdf(false)
+    }
+  }
+  
+  // Function to add content directly to PDF
+  const addContentToPdf = (pdf, data) => {
+    const { personalInfo, education, experience, skills, projects } = data
+    
+    // Helper function for safe text
+    const safe = (text) => text || ''
+    
+    // Set margins
+    const margin = 20 // mm
+    const pageWidth = 210 // A4 width in mm
+    const contentWidth = pageWidth - (margin * 2)
+    
+    let yPos = margin
+    
+    // Add personal info
+    pdf.setFontSize(24)
+    pdf.setTextColor(0, 0, 0)
+    pdf.text(safe(personalInfo.name) || 'Your Name', margin, yPos)
+    
+    yPos += 8
+    pdf.setFontSize(16)
+    pdf.setTextColor(80, 80, 80)
+    pdf.text(safe(personalInfo.title) || 'Professional Title', margin, yPos)
+    
+    yPos += 10
+    pdf.setFontSize(10)
+    pdf.setTextColor(100, 100, 100)
+    
+    // Contact info
+    let contactText = ''
+    if (personalInfo.email) contactText += `Email: ${personalInfo.email}   `
+    if (personalInfo.phone) contactText += `Phone: ${personalInfo.phone}   `
+    if (personalInfo.location) contactText += `Location: ${personalInfo.location}`
+    
+    pdf.text(contactText, margin, yPos)
+    
+    // Summary
+    if (personalInfo.summary) {
+      yPos += 15
+      pdf.setFontSize(14)
+      pdf.setTextColor(0, 0, 0)
+      pdf.text('Summary', margin, yPos)
+      
+      yPos += 2
+      pdf.line(margin, yPos, pageWidth - margin, yPos) // Add a line
+      
+      yPos += 6
+      pdf.setFontSize(10)
+      pdf.setTextColor(80, 80, 80)
+      
+      // Split text to fit within margins
+      const summaryLines = pdf.splitTextToSize(safe(personalInfo.summary), contentWidth)
+      pdf.text(summaryLines, margin, yPos)
+      
+      yPos += (summaryLines.length * 5) + 5
+    }
+    
+    // Experience
+    if (experience.length > 0) {
+      pdf.setFontSize(14)
+      pdf.setTextColor(0, 0, 0)
+      pdf.text('Experience', margin, yPos)
+      
+      yPos += 2
+      pdf.line(margin, yPos, pageWidth - margin, yPos) // Add a line
+      
+      yPos += 6
+      
+      experience.forEach(exp => {
+        pdf.setFontSize(12)
+        pdf.setTextColor(0, 0, 0)
+        pdf.text(safe(exp.title), margin, yPos)
+        
+        // Company and date on the same line
+        pdf.setFontSize(10)
+        pdf.setTextColor(80, 80, 80)
+        const company = safe(exp.company)
+        const date = `${safe(exp.startDate)} - ${exp.endDate || 'Present'}`
+        
+        pdf.text(company, margin, yPos + 5)
+        
+        // Right align the date
+        const dateWidth = pdf.getTextWidth(date)
+        pdf.text(date, pageWidth - margin - dateWidth, yPos + 5)
+        
+        // Location
+        if (exp.location) {
+          pdf.text(safe(exp.location), margin, yPos + 10)
+        }
+        
+        yPos += 15
+        
+        // Description
+        if (exp.description) {
+          const descLines = safe(exp.description).split('\n')
+          
+          descLines.forEach(line => {
+            if (line.trim()) {
+              const bulletText = `• ${line.trim()}`
+              const wrappedText = pdf.splitTextToSize(bulletText, contentWidth - 5)
+              
+              pdf.text(wrappedText, margin + 5, yPos)
+              yPos += (wrappedText.length * 5) + 2
+            }
+          })
+        }
+        
+        yPos += 5
+      })
+    }
+    
+    // Education
+    if (education.length > 0) {
+      pdf.setFontSize(14)
+      pdf.setTextColor(0, 0, 0)
+      pdf.text('Education', margin, yPos)
+      
+      yPos += 2
+      pdf.line(margin, yPos, pageWidth - margin, yPos) // Add a line
+      
+      yPos += 6
+      
+      education.forEach(edu => {
+        pdf.setFontSize(12)
+        pdf.setTextColor(0, 0, 0)
+        pdf.text(safe(edu.degree), margin, yPos)
+        
+        // School and date on the same line
+        pdf.setFontSize(10)
+        pdf.setTextColor(80, 80, 80)
+        const school = safe(edu.school)
+        const date = `${safe(edu.startDate)} - ${edu.endDate || 'Present'}`
+        
+        pdf.text(school, margin, yPos + 5)
+        
+        // Right align the date
+        const dateWidth = pdf.getTextWidth(date)
+        pdf.text(date, pageWidth - margin - dateWidth, yPos + 5)
+        
+        // Location
+        if (edu.location) {
+          pdf.text(safe(edu.location), margin, yPos + 10)
+        }
+        
+        yPos += 15
+        
+        // Description
+        if (edu.description) {
+          const descText = pdf.splitTextToSize(safe(edu.description), contentWidth)
+          pdf.text(descText, margin, yPos)
+          yPos += (descText.length * 5) + 2
+        }
+        
+        yPos += 5
+      })
+    }
+    
+    // Skills
+    if (skills.length > 0) {
+      pdf.setFontSize(14)
+      pdf.setTextColor(0, 0, 0)
+      pdf.text('Skills', margin, yPos)
+      
+      yPos += 2
+      pdf.line(margin, yPos, pageWidth - margin, yPos) // Add a line
+      
+      yPos += 6
+      
+      // Create a comma-separated list of skills
+      const skillNames = skills.map(skill => safe(skill.name)).join(', ')
+      const skillLines = pdf.splitTextToSize(skillNames, contentWidth)
+      
+      pdf.setFontSize(10)
+      pdf.setTextColor(80, 80, 80)
+      pdf.text(skillLines, margin, yPos)
+      
+      yPos += (skillLines.length * 5) + 10
+    }
+    
+    // Projects
+    if (projects.length > 0) {
+      pdf.setFontSize(14)
+      pdf.setTextColor(0, 0, 0)
+      pdf.text('Projects', margin, yPos)
+      
+      yPos += 2
+      pdf.line(margin, yPos, pageWidth - margin, yPos) // Add a line
+      
+      yPos += 6
+      
+      projects.forEach(project => {
+        pdf.setFontSize(12)
+        pdf.setTextColor(0, 0, 0)
+        
+        // Project name and date on the same line
+        const name = safe(project.name)
+        pdf.text(name, margin, yPos)
+        
+        if (project.date) {
+          const date = safe(project.date)
+          const dateWidth = pdf.getTextWidth(date)
+          
+          pdf.setFontSize(10)
+          pdf.setTextColor(80, 80, 80)
+          pdf.text(date, pageWidth - margin - dateWidth, yPos)
+        }
+        
+        yPos += 5
+        
+        // URL
+        if (project.url) {
+          pdf.setFontSize(10)
+          pdf.setTextColor(0, 0, 255) // Blue for URL
+          pdf.text(safe(project.url), margin, yPos)
+          yPos += 5
+        }
+        
+        // Description
+        if (project.description) {
+          pdf.setFontSize(10)
+          pdf.setTextColor(80, 80, 80)
+          const descText = pdf.splitTextToSize(safe(project.description), contentWidth)
+          pdf.text(descText, margin, yPos)
+          yPos += (descText.length * 5) + 2
+        }
+        
+        yPos += 5
+      })
     }
   }
 
@@ -213,7 +317,7 @@ function App() {
           {/* Tab Navigation */}
           <div className="flex border-b border-gray-200 mb-6">
             <button
-              className={`py-3 px-6 font-medium text-sm  -none ${
+              className={`py-3 px-6 font-medium text-sm focus-none ${
                 activeTab === 'edit'
                   ? 'border-b-2 border-blue-500 text-blue-500'
                   : 'text-gray-400 hover:text-gray-600'
@@ -223,7 +327,7 @@ function App() {
               Edit Resume
             </button>
             <button
-              className={`py-3 px-6 font-medium text-sm  -none ${
+              className={`py-3 px-6 font-medium text-sm focus-none ${
                 activeTab === 'preview'
                   ? 'border-b-2 border-blue-500 text-blue-500'
                   : 'text-gray-400 hover:text-gray-600'

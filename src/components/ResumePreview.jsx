@@ -3,46 +3,78 @@ import { forwardRef } from 'react'
 const ResumePreview = forwardRef(({ resumeData }, ref) => {
   const { personalInfo, education, experience, skills, projects } = resumeData
 
+  // Define standard colors to replace Tailwind colors
+  const colors = {
+    white: '#ffffff',
+    gray100: '#f3f4f6',
+    gray300: '#d1d5db',
+    gray600: '#4b5563',
+    gray700: '#374151',
+    gray800: '#1f2937',
+    gray900: '#111827',
+    blue500: '#3b82f6',
+    blue700: '#1d4ed8'
+  }
+
   return (
     <div 
       ref={ref} 
-      className="bg-white p-8 w-full mx-auto pdf-safe" 
+      className="pdf-safe" 
       style={{ 
+        backgroundColor: colors.white,
+        padding: '2rem',
+        width: '100%',
+        margin: '0 auto',
         minHeight: '1056px',
         maxWidth: '816px',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        fontFamily: 'system-ui, sans-serif'
       }}
     >
       {/* Header / Personal Info */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">{personalInfo.name || 'Your Name'}</h1>
-        <p className="text-xl text-gray-700 mt-1">{personalInfo.title || 'Professional Title'}</p>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ 
+          fontSize: '1.875rem', 
+          fontWeight: 'bold', 
+          color: colors.gray900,
+          margin: '0'
+        }}>
+          {personalInfo.name || 'Your Name'}
+        </h1>
+        <p style={{ 
+          fontSize: '1.25rem', 
+          color: colors.gray700,
+          marginTop: '0.25rem',
+          marginBottom: '0'
+        }}>
+          {personalInfo.title || 'Professional Title'}
+        </p>
         
-        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-gray-600">
+        <div style={{ 
+          display: 'flex', 
+          flexWrap: 'wrap', 
+          gap: '1rem', 
+          marginTop: '0.75rem',
+          fontSize: '0.875rem',
+          color: colors.gray600
+        }}>
           {personalInfo.email && (
-            <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#4b5563' }}>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ marginRight: '0.25rem' }}>✉</span>
               {personalInfo.email}
             </div>
           )}
           
           {personalInfo.phone && (
-            <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#4b5563' }}>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ marginRight: '0.25rem' }}>📞</span>
               {personalInfo.phone}
             </div>
           )}
           
           {personalInfo.location && (
-            <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: '#4b5563' }}>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ marginRight: '0.25rem' }}>📍</span>
               {personalInfo.location}
             </div>
           )}
@@ -51,32 +83,58 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
 
       {/* Summary */}
       {personalInfo.summary && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-1 mb-2">Summary</h2>
-          <p className="text-gray-700">{personalInfo.summary}</p>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h2 style={{ 
+            fontSize: '1.125rem', 
+            fontWeight: '600', 
+            color: colors.gray900,
+            borderBottom: `1px solid ${colors.gray300}`,
+            paddingBottom: '0.25rem',
+            marginBottom: '0.5rem'
+          }}>
+            Summary
+          </h2>
+          <p style={{ color: colors.gray700 }}>{personalInfo.summary}</p>
         </div>
       )}
 
       {/* Experience */}
       {experience.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-1 mb-2">Experience</h2>
-          <div className="space-y-4">
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h2 style={{ 
+            fontSize: '1.125rem', 
+            fontWeight: '600', 
+            color: colors.gray900,
+            borderBottom: `1px solid ${colors.gray300}`,
+            paddingBottom: '0.25rem',
+            marginBottom: '0.5rem'
+          }}>
+            Experience
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {experience.map((exp, index) => (
               <div key={index}>
-                <div className="flex justify-between">
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <div>
-                    <h3 className="font-medium text-gray-900">{exp.title}</h3>
-                    <p className="text-gray-700">{exp.company}</p>
+                    <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{exp.title}</h3>
+                    <p style={{ color: colors.gray700, margin: '0.125rem 0' }}>{exp.company}</p>
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
                     {exp.startDate} - {exp.endDate || 'Present'}
                   </div>
                 </div>
-                <p className="text-sm text-gray-700 mt-1">{exp.location}</p>
-                <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
-                  {exp.description.split('\n').map((item, i) => (
-                    <li key={i}>{item}</li>
+                <p style={{ fontSize: '0.875rem', color: colors.gray700, marginTop: '0.25rem' }}>{exp.location}</p>
+                <ul style={{ 
+                  listStyleType: 'disc', 
+                  paddingLeft: '1.25rem', 
+                  color: colors.gray700, 
+                  marginTop: '0.5rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.25rem'
+                }}>
+                  {exp.description?.split('\n').map((item, i) => (
+                    item.trim() ? <li key={i}>{item}</li> : null
                   ))}
                 </ul>
               </div>
@@ -87,23 +145,32 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
 
       {/* Education */}
       {education.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-1 mb-2">Education</h2>
-          <div className="space-y-4">
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h2 style={{ 
+            fontSize: '1.125rem', 
+            fontWeight: '600', 
+            color: colors.gray900,
+            borderBottom: `1px solid ${colors.gray300}`,
+            paddingBottom: '0.25rem',
+            marginBottom: '0.5rem'
+          }}>
+            Education
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {education.map((edu, index) => (
               <div key={index}>
-                <div className="flex justify-between">
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <div>
-                    <h3 className="font-medium text-gray-900">{edu.degree}</h3>
-                    <p className="text-gray-700">{edu.school}</p>
+                    <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{edu.degree}</h3>
+                    <p style={{ color: colors.gray700, margin: '0.125rem 0' }}>{edu.school}</p>
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
                     {edu.startDate} - {edu.endDate || 'Present'}
                   </div>
                 </div>
-                <p className="text-sm text-gray-700 mt-1">{edu.location}</p>
+                <p style={{ fontSize: '0.875rem', color: colors.gray700, marginTop: '0.25rem' }}>{edu.location}</p>
                 {edu.description && (
-                  <p className="text-gray-700 mt-2">{edu.description}</p>
+                  <p style={{ color: colors.gray700, marginTop: '0.5rem' }}>{edu.description}</p>
                 )}
               </div>
             ))}
@@ -113,11 +180,26 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
 
       {/* Skills */}
       {skills.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-1 mb-2">Skills</h2>
-          <div className="flex flex-wrap gap-2">
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h2 style={{ 
+            fontSize: '1.125rem', 
+            fontWeight: '600', 
+            color: colors.gray900,
+            borderBottom: `1px solid ${colors.gray300}`,
+            paddingBottom: '0.25rem',
+            marginBottom: '0.5rem'
+          }}>
+            Skills
+          </h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
             {skills.map((skill, index) => (
-              <span key={index} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm" style={{ backgroundColor: '#f3f4f6', color: '#1f2937' }}>
+              <span key={index} style={{ 
+                backgroundColor: colors.gray100, 
+                color: colors.gray800, 
+                padding: '0.25rem 0.75rem', 
+                borderRadius: '9999px', 
+                fontSize: '0.875rem' 
+              }}>
                 {skill.name}
               </span>
             ))}
@@ -127,23 +209,37 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
 
       {/* Projects */}
       {projects.length > 0 && (
-        <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 border-b border-gray-300 pb-1 mb-2">Projects</h2>
-          <div className="space-y-4">
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h2 style={{ 
+            fontSize: '1.125rem', 
+            fontWeight: '600', 
+            color: colors.gray900,
+            borderBottom: `1px solid ${colors.gray300}`,
+            paddingBottom: '0.25rem',
+            marginBottom: '0.5rem'
+          }}>
+            Projects
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {projects.map((project, index) => (
               <div key={index}>
-                <div className="flex justify-between">
-                  <h3 className="font-medium text-gray-900">{project.name}</h3>
-                  <div className="text-sm text-gray-600">
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{project.name}</h3>
+                  <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
                     {project.date}
                   </div>
                 </div>
                 {project.url && (
-                  <a href={project.url} target="_blank" rel="noopener noreferrer" className="text-sm" style={{ color: '#1e40af' }}>
+                  <a 
+                    href={project.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    style={{ fontSize: '0.875rem', color: colors.blue700, textDecoration: 'none' }}
+                  >
                     {project.url}
                   </a>
                 )}
-                <p className="text-gray-700 mt-2">{project.description}</p>
+                <p style={{ color: colors.gray700, marginTop: '0.5rem' }}>{project.description}</p>
               </div>
             ))}
           </div>
