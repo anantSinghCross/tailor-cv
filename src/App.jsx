@@ -131,10 +131,10 @@ function App() {
             {/* Edit Tab */}
             {activeTab === 'edit' && (
               <div className="w-full">
-                <div className="flex justify-end mb-4">
+                <div className="flex justify-end mb-5">
                   <button 
                     onClick={handleClearData}
-                    className="font-bold py-2 px-4 rounded-md bg-red-500 hover:bg-red-600 text-white"
+                    className="font-bold py-2 px-4 rounded-md bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/50"
                   >
                     Clear All Data
                   </button>
@@ -150,14 +150,14 @@ function App() {
             {/* Preview Tab */}
             {activeTab === 'preview' && (
               <div className="w-full">
-                <div className="flex justify-end mb-4">
+                <div className="flex justify-end mb-5">
                   <button 
                     onClick={handlePrint}
                     disabled={isGeneratingPdf}
                     className={`font-bold py-2 px-4 rounded-md ${
                       isGeneratingPdf 
                         ? 'bg-gray-300 cursor-not-allowed text-gray-500' 
-                        : 'bg-blue-500 hover:bg-blue-600 text-white'
+                        : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/50'
                     }`}
                   >
                     {isGeneratingPdf ? 'Generating PDF...' : 'Download PDF'}
