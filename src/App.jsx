@@ -1,9 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { jsPDF } from 'jspdf'
-import html2canvas from 'html2canvas'
 import ResumeForm from './components/ResumeForm'
 import ResumePreview from './components/ResumePreview'
-import { addContentToPdf, generateResumePdf } from './utils/pdfGenerator'
+import { generateResumePdf } from './utils/pdfUtils'
 import './App.css'
 
 // Default empty resume data
@@ -166,7 +164,7 @@ function App() {
                   </button>
                 </div>
                 
-                  <ResumePreview ref={resumeRef} resumeData={resumeData} />
+                <ResumePreview ref={resumeRef} resumeData={resumeData} />
 
               </div>
             )}

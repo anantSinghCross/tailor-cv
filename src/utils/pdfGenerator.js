@@ -16,7 +16,7 @@ export const addContentToPdf = (pdf, data) => {
   const safe = (text) => text || ''
   
   // Set margins
-  const margin = 20 // mm
+  const margin = 10 // mm
   const pageWidth = 210 // A4 width in mm
   const pageHeight = 297 // A4 height in mm
   const contentWidth = pageWidth - (margin * 2)
