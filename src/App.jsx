@@ -235,42 +235,46 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-blue-100 text-blue-500 py-6 w-full">
-        <div className="container mx-auto px-5 max-w-full">
-          <h1 className="text-3xl font-bold">Tailor CV</h1>
-          <p className="text-blue-500">Create a professional resume in minutes</p>
+      <header className="bg-gradient-to-r from-blue-600 to-indigo-800 text-white py-6 w-full shadow-lg">
+        <div className="container mx-auto px-5 max-w-full flex items-center justify-between">
+          <div className="flex items-center">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Tailor CV</h1>
+              <p className="text-blue-100 text-sm">Create a professional resume in minutes</p>
+            </div>
+          </div>
         </div>
       </header>
       
       <main className="flex-grow w-full">
         <div className="container mx-auto px-4 py-8 max-w-full">
           {/* Tab Navigation */}
-          <div className="flex gap-2 p-1 justify-evenly bg-gray-200 shadow-inner rounded-lg mb-6 w-full">
+          <div className="tab-navigation flex gap-2 p-1 justify-evenly bg-gray-200 shadow-inner rounded-lg mb-6 w-full">
             <button
-              className={`flex-1 font-medium text-sm focus-none ${
+              className={`flex-1 font-medium text-sm py-2 rounded transition-all ${
                 activeTab === 'edit'
-                  ? 'shadow-md rounded-md bg-white'
-                  : 'text-gray-400 hover:text-gray-600'
+                  ? 'shadow-md rounded-md bg-white text-blue-600 active'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
               onClick={() => setActiveTab('edit')}
             >
               Edit Content
             </button>
             <button
-              className={`flex-1 font-medium text-sm focus-none ${
+              className={`flex-1 font-medium text-sm py-2 rounded transition-all ${
                 activeTab === 'preview'
-                  ? 'shadow-md rounded-md bg-white'
-                  : 'text-gray-400 hover:text-gray-600'
+                  ? 'shadow-md rounded-md bg-white text-blue-600 active'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
               onClick={() => setActiveTab('preview')}
             >
               Preview
             </button>
             <button
-              className={`flex-1 font-medium text-sm focus-none ${
+              className={`flex-1 font-medium text-sm py-2 rounded transition-all ${
                 activeTab === 'layout'
-                  ? 'shadow-md rounded-md bg-white'
-                  : 'text-gray-400 hover:text-gray-600'
+                  ? 'shadow-md rounded-md bg-white text-blue-600 active'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
               onClick={() => setActiveTab('layout')}
             >
