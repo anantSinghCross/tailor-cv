@@ -3,13 +3,14 @@ import { pdf } from '@react-pdf/renderer';
 import ResumePDF from '../components/ResumePDF';
 
 /**
- * Generates a PDF from the resume data using react-pdf
+ * Creates a PDF document from resume data
  * @param {Object} resumeData - The resume data object
- * @returns {Promise<Blob>} - Promise that resolves to the PDF blob
+ * @param {Array} sectionOrder - The order and visibility of resume sections
+ * @returns {Promise<Blob>} - A promise that resolves to a PDF blob
  */
-export const createResumePDF = async (resumeData) => {
+export const createResumePDF = async (resumeData, sectionOrder) => {
   // Create the PDF document
-  const document = React.createElement(ResumePDF, { resumeData });
+  const document = React.createElement(ResumePDF, { resumeData, sectionOrder });
   
   // Generate PDF blob
   const blob = await pdf(document).toBlob();
@@ -17,19 +18,20 @@ export const createResumePDF = async (resumeData) => {
 };
 
 /**
- * Creates and downloads a PDF resume
- * @param {Object} resumeData - Resume data object
+ * Generates a resume PDF and triggers a download
+ * @param {Object} resumeData - The resume data object
+ * @param {Array} sectionOrder - The order and visibility of resume sections
  * @returns {Promise<void>}
  */
-export const generateResumePdf = async (resumeData) => {
+export const generateResumePdf = async (resumeData, sectionOrder) => {
   try {
     // Generate PDF blob
-    const blob = await createResumePDF(resumeData);
+    const blob = await createResumePDF(resumeData, sectionOrder);
     
     // Create a URL for the blob
     const url = URL.createObjectURL(blob);
     
-    // Create a link element
+    // Create a link element and trigger download
     const link = document.createElement('a');
     link.href = url;
     link.download = 'resume.pdf';
@@ -42,7 +44,9 @@ export const generateResumePdf = async (resumeData) => {
     
     // Clean up
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    
+    // Clean up the URL object
+    setTimeout(() => URL.revokeObjectURL(url), 100);
     
     return true;
   } catch (error) {

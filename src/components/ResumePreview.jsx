@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useState } from 'react'
 
-const ResumePreview = forwardRef(({ resumeData }, ref) => {
+const ResumePreview = forwardRef(({ resumeData, sectionOrder }, ref) => {
   const { personalInfo, education, experience, skills, projects } = resumeData
   
   // Define standard colors to replace Tailwind colors
@@ -16,21 +16,211 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
     blue700: '#1d4ed8'
   }
 
+  // Render the summary section
+  const renderSummary = () => {
+    if (!personalInfo.summary) return null
+    
+    return (
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ 
+          fontSize: '1.125rem', 
+          fontWeight: '600', 
+          color: colors.gray900,
+          borderBottom: `1px solid ${colors.gray300}`,
+          paddingBottom: '0.25rem',
+          marginBottom: '0.5rem'
+        }}>
+          Summary
+        </h2>
+        <p style={{ color: colors.gray700 }}>{personalInfo.summary}</p>
+      </div>
+    )
+  }
+  
+  // Render the experience section
+  const renderExperience = () => {
+    if (!experience.length) return null
+    
+    return (
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ 
+          fontSize: '1.125rem', 
+          fontWeight: '600', 
+          color: colors.gray900,
+          borderBottom: `1px solid ${colors.gray300}`,
+          paddingBottom: '0.25rem',
+          marginBottom: '0.5rem'
+        }}>
+          Experience
+        </h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {experience.map((exp, index) => (
+            <div key={index}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                  <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{exp.title}</h3>
+                  <p style={{ color: colors.gray700, margin: '0.125rem 0' }}>{exp.company}</p>
+                </div>
+                <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
+                  {exp.startDate} - {exp.endDate || 'Present'}
+                </div>
+              </div>
+              <p style={{ fontSize: '0.875rem', color: colors.gray700, marginTop: '0.25rem' }}>{exp.location}</p>
+              <ul style={{ 
+                listStyleType: 'disc', 
+                paddingLeft: '1.25rem', 
+                color: colors.gray700, 
+                marginTop: '0.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.25rem'
+              }}>
+                {exp.description?.split('\n').map((item, i) => (
+                  item.trim() ? <li key={i}>{item}</li> : null
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+  
+  // Render the education section
+  const renderEducation = () => {
+    if (!education.length) return null
+    
+    return (
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ 
+          fontSize: '1.125rem', 
+          fontWeight: '600', 
+          color: colors.gray900,
+          borderBottom: `1px solid ${colors.gray300}`,
+          paddingBottom: '0.25rem',
+          marginBottom: '0.5rem'
+        }}>
+          Education
+        </h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {education.map((edu, index) => (
+            <div key={index}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                  <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{edu.degree}</h3>
+                  <p style={{ color: colors.gray700, margin: '0.125rem 0' }}>{edu.school}</p>
+                </div>
+                <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
+                  {edu.startDate} - {edu.endDate || 'Present'}
+                </div>
+              </div>
+              <p style={{ fontSize: '0.875rem', color: colors.gray700, marginTop: '0.25rem' }}>{edu.location}</p>
+              {edu.description && (
+                <p style={{ color: colors.gray700, marginTop: '0.5rem' }}>{edu.description}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+  
+  // Render the skills section
+  const renderSkills = () => {
+    if (!skills.length) return null
+    
+    return (
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ 
+          fontSize: '1.125rem', 
+          fontWeight: '600', 
+          color: colors.gray900,
+          borderBottom: `1px solid ${colors.gray300}`,
+          paddingBottom: '0.25rem',
+          marginBottom: '0.5rem'
+        }}>
+          Skills
+        </h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+          {skills.map((skill, index) => (
+            <span key={index} style={{ 
+              backgroundColor: colors.gray100, 
+              color: colors.gray800, 
+              padding: '0.25rem 0.75rem', 
+              borderRadius: '9999px', 
+              fontSize: '0.875rem' 
+            }}>
+              {skill.name}
+            </span>
+          ))}
+        </div>
+      </div>
+    )
+  }
+  
+  // Render the projects section
+  const renderProjects = () => {
+    if (!projects.length) return null
+    
+    return (
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ 
+          fontSize: '1.125rem', 
+          fontWeight: '600', 
+          color: colors.gray900,
+          borderBottom: `1px solid ${colors.gray300}`,
+          paddingBottom: '0.25rem',
+          marginBottom: '0.5rem'
+        }}>
+          Projects
+        </h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {projects.map((project, index) => (
+            <div key={index}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{project.name}</h3>
+                <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
+                  {project.date}
+                </div>
+              </div>
+              {project.url && (
+                <a 
+                  href={project.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{ fontSize: '0.875rem', color: colors.blue700, textDecoration: 'none' }}
+                >
+                  {project.url}
+                </a>
+              )}
+              <p style={{ color: colors.gray700, marginTop: '0.5rem' }}>{project.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+  
+  // Map section IDs to render functions
+  const sectionRenderers = {
+    summary: renderSummary,
+    experience: renderExperience,
+    education: renderEducation,
+    skills: renderSkills,
+    projects: renderProjects
+  }
+
   return (
+    <div ref={ref} className="resume-container" style={{ maxWidth: '800px', margin: '0 auto' }}>
       <div 
-        ref={ref}
         className="resume-page"
         style={{ 
           backgroundColor: colors.white,
           padding: '2rem',
-          width: '100%',
-          maxWidth: '800px',
-          margin: '0 auto',
           boxSizing: 'border-box',
           fontFamily: 'system-ui, sans-serif',
           boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-          position: 'relative',
-          border: '2px dashed purple'
+          borderRadius: '0.5rem',
         }}
       >
         {/* Header / Personal Info */}
@@ -83,171 +273,20 @@ const ResumePreview = forwardRef(({ resumeData }, ref) => {
           </div>
         </div>
 
-        {/* Summary */}
-        {personalInfo.summary && (
-          <div style={{ marginBottom: '1.5rem' }}>
-            <h2 style={{ 
-              fontSize: '1.125rem', 
-              fontWeight: '600', 
-              color: colors.gray900,
-              borderBottom: `1px solid ${colors.gray300}`,
-              paddingBottom: '0.25rem',
-              marginBottom: '0.5rem'
-            }}>
-              Summary
-            </h2>
-            <p style={{ color: colors.gray700 }}>{personalInfo.summary}</p>
-          </div>
-        )}
-
-        {/* Experience */}
-        {experience.length > 0 && (
-          <div style={{ marginBottom: '1.5rem' }}>
-            <h2 style={{ 
-              fontSize: '1.125rem', 
-              fontWeight: '600', 
-              color: colors.gray900,
-              borderBottom: `1px solid ${colors.gray300}`,
-              paddingBottom: '0.25rem',
-              marginBottom: '0.5rem'
-            }}>
-              Experience
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {experience.map((exp, index) => (
-                <div key={index}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div>
-                      <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{exp.title}</h3>
-                      <p style={{ color: colors.gray700, margin: '0.125rem 0' }}>{exp.company}</p>
-                    </div>
-                    <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
-                      {exp.startDate} - {exp.endDate || 'Present'}
-                    </div>
-                  </div>
-                  <p style={{ fontSize: '0.875rem', color: colors.gray700, marginTop: '0.25rem' }}>{exp.location}</p>
-                  <ul style={{ 
-                    listStyleType: 'disc', 
-                    paddingLeft: '1.25rem', 
-                    color: colors.gray700, 
-                    marginTop: '0.5rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.25rem'
-                  }}>
-                    {exp.description?.split('\n').map((item, i) => (
-                      item.trim() ? <li key={i}>{item}</li> : null
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Education */}
-        {education.length > 0 && (
-          <div style={{ marginBottom: '1.5rem' }}>
-            <h2 style={{ 
-              fontSize: '1.125rem', 
-              fontWeight: '600', 
-              color: colors.gray900,
-              borderBottom: `1px solid ${colors.gray300}`,
-              paddingBottom: '0.25rem',
-              marginBottom: '0.5rem'
-            }}>
-              Education
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {education.map((edu, index) => (
-                <div key={index}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div>
-                      <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{edu.degree}</h3>
-                      <p style={{ color: colors.gray700, margin: '0.125rem 0' }}>{edu.school}</p>
-                    </div>
-                    <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
-                      {edu.startDate} - {edu.endDate || 'Present'}
-                    </div>
-                  </div>
-                  <p style={{ fontSize: '0.875rem', color: colors.gray700, marginTop: '0.25rem' }}>{edu.location}</p>
-                  {edu.description && (
-                    <p style={{ color: colors.gray700, marginTop: '0.5rem' }}>{edu.description}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Skills */}
-        {skills.length > 0 && (
-          <div style={{ marginBottom: '1.5rem' }}>
-            <h2 style={{ 
-              fontSize: '1.125rem', 
-              fontWeight: '600', 
-              color: colors.gray900,
-              borderBottom: `1px solid ${colors.gray300}`,
-              paddingBottom: '0.25rem',
-              marginBottom: '0.5rem'
-            }}>
-              Skills
-            </h2>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {skills.map((skill, index) => (
-                <span key={index} style={{ 
-                  backgroundColor: colors.gray100, 
-                  color: colors.gray800, 
-                  padding: '0.25rem 0.75rem', 
-                  borderRadius: '9999px', 
-                  fontSize: '0.875rem' 
-                }}>
-                  {skill.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Projects */}
-        {projects.length > 0 && (
-          <div style={{ marginBottom: '1.5rem' }}>
-            <h2 style={{ 
-              fontSize: '1.125rem', 
-              fontWeight: '600', 
-              color: colors.gray900,
-              borderBottom: `1px solid ${colors.gray300}`,
-              paddingBottom: '0.25rem',
-              marginBottom: '0.5rem'
-            }}>
-              Projects
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {projects.map((project, index) => (
-                <div key={index}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{project.name}</h3>
-                    <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
-                      {project.date}
-                    </div>
-                  </div>
-                  {project.url && (
-                    <a 
-                      href={project.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      style={{ fontSize: '0.875rem', color: colors.blue700, textDecoration: 'none' }}
-                    >
-                      {project.url}
-                    </a>
-                  )}
-                  <p style={{ color: colors.gray700, marginTop: '0.5rem' }}>{project.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Render sections based on order */}
+        {sectionOrder && sectionOrder
+          .filter(section => section.visible)
+          .map(section => {
+            const renderSection = sectionRenderers[section.id]
+            return renderSection ? (
+              <div key={section.id}>
+                {renderSection()}
+              </div>
+            ) : null
+          })
+        }
       </div>
+    </div>
   )
 })
 
