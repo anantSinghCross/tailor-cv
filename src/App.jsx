@@ -103,11 +103,11 @@ function App() {
       <main className="flex-grow w-full">
         <div className="container mx-auto px-4 py-8 max-w-full">
           {/* Tab Navigation */}
-          <div className="flex border-b border-gray-200 mb-6">
+          <div className="flex gap-2 p-1 justify-evenly bg-gray-200 shadow-inner rounded-lg mb-6 w-full">
             <button
-              className={`py-3 px-6 font-medium text-sm focus-none ${
+              className={`flex-1 font-medium text-sm focus-none ${
                 activeTab === 'edit'
-                  ? 'border-b-2 border-blue-500 text-blue-500'
+                  ? 'shadow-md rounded-md bg-white'
                   : 'text-gray-400 hover:text-gray-600'
               }`}
               onClick={() => setActiveTab('edit')}
@@ -115,9 +115,9 @@ function App() {
               Edit Resume
             </button>
             <button
-              className={`py-3 px-6 font-medium text-sm focus-none ${
+              className={`flex-1 font-medium text-sm focus-none ${
                 activeTab === 'preview'
-                  ? 'border-b-2 border-blue-500 text-blue-500'
+                  ? 'shadow-md rounded-md bg-white'
                   : 'text-gray-400 hover:text-gray-600'
               }`}
               onClick={() => setActiveTab('preview')}
@@ -131,10 +131,10 @@ function App() {
             {/* Edit Tab */}
             {activeTab === 'edit' && (
               <div className="w-full">
-                <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+                <div className="flex justify-end mb-4">
                   <button 
                     onClick={handleClearData}
-                    className="w-full font-bold py-2 px-4 rounded bg-red-500 hover:bg-red-600 text-white"
+                    className="font-bold py-2 px-4 rounded-md bg-red-500 hover:bg-red-600 text-white"
                   >
                     Clear All Data
                   </button>
@@ -150,11 +150,11 @@ function App() {
             {/* Preview Tab */}
             {activeTab === 'preview' && (
               <div className="w-full">
-                <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+                <div className="flex justify-end mb-4">
                   <button 
                     onClick={handlePrint}
                     disabled={isGeneratingPdf}
-                    className={`w-full font-bold py-2 px-4 rounded ${
+                    className={`font-bold py-2 px-4 rounded-md ${
                       isGeneratingPdf 
                         ? 'bg-gray-300 cursor-not-allowed text-gray-500' 
                         : 'bg-blue-500 hover:bg-blue-600 text-white'
