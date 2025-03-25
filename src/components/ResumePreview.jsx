@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react'
 
 const ResumePreview = forwardRef(({ resumeData, sectionOrder }, ref) => {
-  const { personalInfo, education, experience, skills, projects } = resumeData
+  const { personalInfo, education, experience, skills, projects, certifications } = resumeData
   
   // Define standard colors to replace Tailwind colors
   const colors = {
@@ -201,13 +201,57 @@ const ResumePreview = forwardRef(({ resumeData, sectionOrder }, ref) => {
     )
   }
   
+  // Render the certifications section
+  const renderCertifications = () => {
+    if (!certifications || !certifications.length) return null
+    
+    return (
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ 
+          fontSize: '1.125rem', 
+          fontWeight: '600', 
+          color: colors.gray900,
+          borderBottom: `1px solid ${colors.gray300}`,
+          paddingBottom: '0.25rem',
+          marginBottom: '0.5rem'
+        }}>
+          Certifications
+        </h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {certifications.map((cert, index) => (
+            <div key={index}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{cert.name}</h3>
+                <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
+                  {cert.date}
+                </div>
+              </div>
+              <p style={{ color: colors.gray700, margin: '0.125rem 0' }}>{cert.issuer}</p>
+              {cert.url && (
+                <a 
+                  href={cert.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{ fontSize: '0.875rem', color: colors.blue700, textDecoration: 'none' }}
+                >
+                  {cert.url}
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+  
   // Map section IDs to render functions
   const sectionRenderers = {
     summary: renderSummary,
     experience: renderExperience,
     education: renderEducation,
     skills: renderSkills,
-    projects: renderProjects
+    projects: renderProjects,
+    certifications: renderCertifications
   }
 
   return (

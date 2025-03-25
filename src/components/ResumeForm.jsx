@@ -4,6 +4,7 @@ import EducationForm from './forms/EducationForm'
 import ExperienceForm from './forms/ExperienceForm'
 import SkillsForm from './forms/SkillsForm'
 import ProjectsForm from './forms/ProjectsForm'
+import CertificationsForm from './forms/CertificationsForm'
 
 const ResumeForm = ({ resumeData, onPersonalInfoChange, onDataChange }) => {
   const [activeTab, setActiveTab] = useState('personal')
@@ -13,7 +14,8 @@ const ResumeForm = ({ resumeData, onPersonalInfoChange, onDataChange }) => {
     { id: 'education', label: 'Education' },
     { id: 'experience', label: 'Experience' },
     { id: 'skills', label: 'Skills' },
-    { id: 'projects', label: 'Projects' }
+    { id: 'projects', label: 'Projects' },
+    { id: 'certifications', label: 'Certifications' }
   ]
 
   return (
@@ -22,7 +24,7 @@ const ResumeForm = ({ resumeData, onPersonalInfoChange, onDataChange }) => {
         {tabs.map(tab => (
           <button
             key={tab.id}
-            className={`px-4 py-3 font-medium text-sm  -none whitespace-nowrap
+            className={`px-4 py-3 font-medium text-sm focus-none whitespace-nowrap
               ${activeTab === tab.id 
                 ? 'border-b-2 border-blue-500 text-blue-500' 
                 : 'text-gray-400 hover:text-gray-600'}`}
@@ -66,6 +68,13 @@ const ResumeForm = ({ resumeData, onPersonalInfoChange, onDataChange }) => {
           <ProjectsForm 
             projects={resumeData.projects} 
             onChange={(data) => onDataChange('projects', data)} 
+          />
+        </div>
+        
+        <div className={activeTab === 'certifications' ? 'block' : 'hidden'}>
+          <CertificationsForm 
+            certifications={resumeData.certifications} 
+            onChange={(data) => onDataChange('certifications', data)} 
           />
         </div>
       </div>

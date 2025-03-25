@@ -18,6 +18,7 @@ const defaultResumeData = {
   experience: [],
   skills: [],
   projects: [],
+  certifications: [],
 }
 
 // Default section order
@@ -27,6 +28,7 @@ const defaultSectionOrder = [
   { id: 'education', label: 'Education', visible: true },
   { id: 'skills', label: 'Skills', visible: true },
   { id: 'projects', label: 'Projects', visible: true },
+  { id: 'certifications', label: 'Certifications', visible: true },
 ];
 
 // Local storage keys

@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
 
 // Resume PDF Component
 const ResumePDF = ({ resumeData, sectionOrder }) => {
-  const { personalInfo, experience, education, skills, projects } = resumeData;
+  const { personalInfo, experience, education, skills, projects, certifications } = resumeData;
 
   // Render personal information section
   const renderPersonalInfo = () => (
@@ -266,13 +266,39 @@ const ResumePDF = ({ resumeData, sectionOrder }) => {
     );
   };
 
+  // Render certifications section
+  const renderCertifications = () => {
+    if (!certifications?.length) return null;
+
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Certifications</Text>
+        {certifications.map((cert, index) => (
+          <View key={index} style={styles.entryContainer}>
+            <View style={styles.entryHeader}>
+              <Text style={styles.entryTitle}>{safe(cert.name)}</Text>
+              <Text style={styles.entryDate}>{safe(cert.date)}</Text>
+            </View>
+            <Text style={styles.entryCompany}>{safe(cert.issuer)}</Text>
+            {cert.url && (
+              <Link src={cert.url} style={styles.link}>
+                {cert.url}
+              </Link>
+            )}
+          </View>
+        ))}
+      </View>
+    );
+  };
+
   // Map section IDs to render functions
   const sectionRenderers = {
     summary: renderSummary,
     experience: renderExperience,
     education: renderEducation,
     skills: renderSkills,
-    projects: renderProjects
+    projects: renderProjects,
+    certifications: renderCertifications
   };
 
   return (
