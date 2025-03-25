@@ -194,7 +194,7 @@ const ExperienceForm = ({ experience, onChange }) => {
 • Improved application performance by 30%"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Use bullet points (•) for each accomplishment or responsibility. Each bullet point will appear as a separate item on your resume.
+              Use a new line for each accomplishment or responsibility. Each new line will appear as a separate bullet point on your resume.
             </p>
           </div>
           
