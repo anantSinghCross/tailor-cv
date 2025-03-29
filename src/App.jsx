@@ -19,6 +19,7 @@ const defaultResumeData = {
   skills: [],
   projects: [],
   certifications: [],
+  customSections: {}
 }
 
 // Default section order
@@ -60,8 +61,12 @@ function App() {
   })
   
   const [activeTab, setActiveTab] = useState('edit')
+  const [formActiveTab, setFormActiveTab] = useState('personal')
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
   const [draggedItem, setDraggedItem] = useState(null)
+  const [showAddSectionModal, setShowAddSectionModal] = useState(false)
+  const [newSectionName, setNewSectionName] = useState('')
+  const [newSectionType, setNewSectionType] = useState('list') // 'list' or 'paragraph'
 
   const resumeRef = useRef(null)
 
@@ -82,7 +87,7 @@ function App() {
       console.error('Error saving section order to localStorage:', error)
     }
   }, [sectionOrder])
-
+  
   const handlePrint = async () => {
     setIsGeneratingPdf(true);
     try {
@@ -235,6 +240,89 @@ function App() {
     setDraggedItem(null)
   }
 
+  // Function to add a custom section when triggered from the modal
+  const handleAddCustomSection = () => {
+    if (!newSectionName.trim()) {
+      alert('Please enter a section name')
+      return
+    }
+
+    // Create a unique ID for the section
+    const sectionId = `custom-${Date.now()}`
+    
+    // Create the section in both data stores
+    addCustomSection(sectionId, newSectionName, newSectionType)
+    
+    // Reset the form
+    setNewSectionName('')
+    setNewSectionType('list')
+    setShowAddSectionModal(false)
+    
+    // Set the active tab in the form directly
+    setFormActiveTab(sectionId)
+  }
+  
+  // Core function to add a custom section to both data stores
+  const addCustomSection = (sectionId, title, type) => {
+    // Add to resumeData
+    setResumeData(prev => ({
+      ...prev,
+      customSections: {
+        ...prev.customSections,
+        [sectionId]: {
+          title: title,
+          type: type,
+          items: type === 'list' ? [] : null,
+          content: type === 'paragraph' ? '' : null
+        }
+      }
+    }))
+    
+    // Add to section order
+    setSectionOrder(prev => [
+      ...prev, 
+      { 
+        id: sectionId, 
+        label: title, 
+        visible: true, 
+        isCustom: true,
+        type: type
+      }
+    ])
+    
+    return sectionId
+  }
+  
+  // Function to handle adding a section from the ResumeForm
+  const handleAddSectionFromForm = () => {
+    setShowAddSectionModal(true)
+  }
+  
+  // Function to update custom section data
+  const handleCustomSectionChange = (sectionId, data) => {
+    setResumeData(prev => ({
+      ...prev,
+      customSections: {
+        ...prev.customSections,
+        [sectionId]: data
+      }
+    }))
+  }
+  
+  // Function to remove a custom section
+  const handleRemoveCustomSection = (sectionId) => {
+    if (window.confirm('Are you sure you want to remove this section? This action cannot be undone.')) {
+      // Remove from resumeData
+      const newResumeData = { ...resumeData }
+      const { [sectionId]: removed, ...rest } = newResumeData.customSections
+      newResumeData.customSections = rest
+      setResumeData(newResumeData)
+      
+      // Remove from section order
+      setSectionOrder(prev => prev.filter(section => section.id !== sectionId))
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <header className="bg-gradient-to-r from-blue-600 to-indigo-800 text-white py-6 w-full shadow-lg">
@@ -289,7 +377,7 @@ function App() {
             {/* Edit Tab */}
             {activeTab === 'edit' && (
               <div className="w-full">
-                <div className="flex justify-end items-center mb-5">
+                <div className="flex justify-end items-center mb-5 gap-3">
                   <button 
                     onClick={handleClearData}
                     className="font-bold py-2 px-4 rounded-md bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/50"
@@ -302,6 +390,11 @@ function App() {
                   resumeData={resumeData}
                   onPersonalInfoChange={handlePersonalInfoChange}
                   onDataChange={handleDataChange}
+                  onCustomSectionChange={handleCustomSectionChange}
+                  onRemoveCustomSection={handleRemoveCustomSection}
+                  onAddCustomSection={handleAddSectionFromForm}
+                  activeTab={formActiveTab}
+                  setActiveTab={setFormActiveTab}
                 />
               </div>
             )}
@@ -333,12 +426,14 @@ function App() {
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold text-gray-800">Rearrange Resume Sections</h2>
-                  <button
-                    onClick={resetSectionOrder}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-3 rounded-md text-sm"
-                  >
-                    Reset to Default Order
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={resetSectionOrder}
+                      className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-3 rounded-md text-sm"
+                    >
+                      Reset to Default Order
+                    </button>
+                  </div>
                 </div>
                 <p className="text-gray-600 mb-4">Drag and drop to reorder sections or toggle their visibility</p>
                 
@@ -406,6 +501,85 @@ function App() {
           </div>
         </div>
       </main>
+
+      {/* Add Custom Section Modal */}
+      {showAddSectionModal && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Add Custom Section</h2>
+            <div className="mb-4">
+              <label htmlFor="new-section-name" className="block text-sm font-medium text-gray-700 mb-1">
+                Section Name
+              </label>
+              <input
+                type="text"
+                id="new-section-name"
+                value={newSectionName}
+                onChange={(e) => setNewSectionName(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                placeholder="e.g. Achievements, Volunteer Work, Awards"
+              />
+            </div>
+            
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Section Type
+              </label>
+              <div className="flex gap-4">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="sectionType"
+                    value="list"
+                    checked={newSectionType === 'list'}
+                    onChange={() => setNewSectionType('list')}
+                    className="mr-2"
+                  />
+                  <div>
+                    <div className="text-sm font-medium">List</div>
+                    <div className="text-xs text-gray-500">Multiple items with titles (like Education, Work)</div>
+                  </div>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="sectionType"
+                    value="paragraph"
+                    checked={newSectionType === 'paragraph'}
+                    onChange={() => setNewSectionType('paragraph')}
+                    className="mr-2"
+                  />
+                  <div>
+                    <div className="text-sm font-medium">Paragraph</div>
+                    <div className="text-xs text-gray-500">Simple text content (like Summary)</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-2 mt-6">
+              <button
+                type="button"
+                onClick={() => {
+                  setNewSectionName('')
+                  setNewSectionType('list')
+                  setShowAddSectionModal(false)
+                }}
+                className="py-2 px-4 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleAddCustomSection}
+                className="py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
+              >
+                Add Section
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

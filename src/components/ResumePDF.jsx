@@ -17,8 +17,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   name: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
+    marginBottom: 10
   },
   title: {
     fontSize: 14,
@@ -37,9 +38,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  contactIcon: {
-    marginRight: 5,
-  },
   sectionHeader: {
     fontSize: 12,
     fontWeight: 'bold',
@@ -47,10 +45,9 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D1D5DB',
     paddingBottom: 2,
     marginBottom: 5,
-    marginTop: 10,
   },
   section: {
-    marginBottom: 15,
+    marginBottom: 10,
   },
   entryContainer: {
     marginBottom: 10,
@@ -66,6 +63,10 @@ const styles = StyleSheet.create({
   },
   entryCompany: {
     color: '#374151',
+  },
+  entrySubtitle: {
+    color: '#374151',
+    fontSize: 9.5,
   },
   entryDate: {
     fontSize: 9,
@@ -98,7 +99,8 @@ const styles = StyleSheet.create({
   skill: {
     backgroundColor: '#F3F4F6',
     color: '#1F2937',
-    padding: '3 8',
+    paddingTop: 4,
+    paddingHorizontal: 7,
     borderRadius: 10,
     margin: '0 5 5 0',
     fontSize: 9,
@@ -121,7 +123,7 @@ const styles = StyleSheet.create({
 
 // Resume PDF Component
 const ResumePDF = ({ resumeData, sectionOrder }) => {
-  const { personalInfo, experience, education, skills, projects, certifications } = resumeData;
+  const { personalInfo, experience, education, skills, projects, certifications, customSections } = resumeData;
 
   // Render personal information section
   const renderPersonalInfo = () => (
@@ -131,19 +133,16 @@ const ResumePDF = ({ resumeData, sectionOrder }) => {
       <View style={styles.contactInfo}>
         {personalInfo.email && (
           <View style={styles.contactItem}>
-            <Text style={styles.contactIcon}>✉</Text>
             <Text>{personalInfo.email}</Text>
           </View>
         )}
         {personalInfo.phone && (
           <View style={styles.contactItem}>
-            <Text style={styles.contactIcon}>📞</Text>
             <Text>{personalInfo.phone}</Text>
           </View>
         )}
         {personalInfo.location && (
           <View style={styles.contactItem}>
-            <Text style={styles.contactIcon}>📍</Text>
             <Text>{personalInfo.location}</Text>
           </View>
         )}
@@ -175,13 +174,12 @@ const ResumePDF = ({ resumeData, sectionOrder }) => {
             <View style={styles.entryHeader}>
               <View>
                 <Text style={styles.entryTitle}>{safe(exp.title)}</Text>
-                <Text style={styles.entryCompany}>{safe(exp.company)}</Text>
+                <Text style={styles.entryCompany}>{safe(exp.company)}, {safe(exp.location)}</Text>
               </View>
               <Text style={styles.entryDate}>
                 {safe(exp.startDate)} - {exp.endDate || 'Present'}
               </Text>
             </View>
-            <Text style={styles.entryLocation}>{safe(exp.location)}</Text>
             
             {exp.description && exp.description.split('\n').map((bullet, i) => (
               bullet.trim() ? (
@@ -269,24 +267,61 @@ const ResumePDF = ({ resumeData, sectionOrder }) => {
   // Render certifications section
   const renderCertifications = () => {
     if (!certifications?.length) return null;
-
+    
     return (
       <View style={styles.section}>
         <Text style={styles.sectionHeader}>Certifications</Text>
         {certifications.map((cert, index) => (
           <View key={index} style={styles.entryContainer}>
             <View style={styles.entryHeader}>
-              <Text style={styles.entryTitle}>{safe(cert.name)}</Text>
-              <Text style={styles.entryDate}>{safe(cert.date)}</Text>
+              <Text style={styles.entryTitle}>{safe(cert.title)}</Text>
+              {cert.date && <Text style={styles.entryDate}>{safe(cert.date)}</Text>}
             </View>
-            <Text style={styles.entryCompany}>{safe(cert.issuer)}</Text>
-            {cert.url && (
-              <Link src={cert.url} style={styles.link}>
-                {cert.url}
-              </Link>
+            <Text style={styles.entrySubtitle}>{safe(cert.issuer)}</Text>
+            {cert.description && (
+              <Text style={styles.entryDescription}>{safe(cert.description)}</Text>
             )}
           </View>
         ))}
+      </View>
+    );
+  };
+
+  // Render custom section
+  const renderCustomSection = (sectionId) => {
+    if (!customSections?.[sectionId]) return null;
+
+    const section = customSections[sectionId];
+    
+    // Early return if there's no content to display
+    if (
+      (section.type === 'list' && (!section.items?.length)) ||
+      (section.type === 'paragraph' && !section.content)
+    ) {
+      return null;
+    }
+
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>{safe(section.title)}</Text>
+        
+        {section.type === 'paragraph' ? (
+          // Render paragraph content
+          <Text style={styles.entryDescription}>{safe(section.content)}</Text>
+        ) : (
+          // Render list items
+          section.items.map((item, index) => (
+            <View key={index} style={styles.entryContainer}>
+              <View style={styles.entryHeader}>
+                <Text style={styles.entryTitle}>{safe(item.title)}</Text>
+                {item.date && <Text style={styles.entryDate}>{safe(item.date)}</Text>}
+              </View>
+              {item.description && (
+                <Text style={styles.entryDescription}>{safe(item.description)}</Text>
+              )}
+            </View>
+          ))
+        )}
       </View>
     );
   };
@@ -311,8 +346,17 @@ const ResumePDF = ({ resumeData, sectionOrder }) => {
         {sectionOrder && sectionOrder
           .filter(section => section.visible)
           .map(section => {
-            const renderSection = sectionRenderers[section.id];
-            return renderSection ? renderSection() : null;
+            // Handle standard sections
+            if (sectionRenderers[section.id]) {
+              return sectionRenderers[section.id]();
+            }
+            
+            // Handle custom sections
+            if (section.id.startsWith('custom-')) {
+              return renderCustomSection(section.id);
+            }
+            
+            return null;
           })}
       </Page>
     </Document>

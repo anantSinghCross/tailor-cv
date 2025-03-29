@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react'
 
 const ResumePreview = forwardRef(({ resumeData, sectionOrder }, ref) => {
-  const { personalInfo, education, experience, skills, projects, certifications } = resumeData
+  const { personalInfo, education, experience, skills, projects, certifications, customSections } = resumeData
   
   // Define standard colors to replace Tailwind colors
   const colors = {
@@ -221,7 +221,7 @@ const ResumePreview = forwardRef(({ resumeData, sectionOrder }, ref) => {
           {certifications.map((cert, index) => (
             <div key={index}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{cert.name}</h3>
+                <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{cert.title}</h3>
                 <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
                   {cert.date}
                 </div>
@@ -240,6 +240,62 @@ const ResumePreview = forwardRef(({ resumeData, sectionOrder }, ref) => {
             </div>
           ))}
         </div>
+      </div>
+    )
+  }
+  
+  // Render a custom section
+  const renderCustomSection = (sectionId) => {
+    if (!customSections || !customSections[sectionId]) {
+      return null
+    }
+    
+    const section = customSections[sectionId]
+    
+    // Early return if there's no content to display
+    if (
+      (section.type === 'list' && (!section.items || !section.items.length)) ||
+      (section.type === 'paragraph' && !section.content)
+    ) {
+      return null
+    }
+    
+    return (
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ 
+          fontSize: '1.125rem', 
+          fontWeight: '600', 
+          color: colors.gray900,
+          borderBottom: `1px solid ${colors.gray300}`,
+          paddingBottom: '0.25rem',
+          marginBottom: '0.5rem'
+        }}>
+          {section.title}
+        </h2>
+        
+        {section.type === 'paragraph' ? (
+          // Render paragraph content
+          <p style={{ color: colors.gray700 }}>{section.content}</p>
+        ) : (
+          // Render list items
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {section.items.map((item, index) => (
+              <div key={index}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{item.title}</h3>
+                  {item.date && (
+                    <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
+                      {item.date}
+                    </div>
+                  )}
+                </div>
+                {item.description && (
+                  <p style={{ color: colors.gray700, marginTop: '0.5rem' }}>{item.description}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     )
   }
@@ -321,12 +377,25 @@ const ResumePreview = forwardRef(({ resumeData, sectionOrder }, ref) => {
         {sectionOrder && sectionOrder
           .filter(section => section.visible)
           .map(section => {
-            const renderSection = sectionRenderers[section.id]
-            return renderSection ? (
-              <div key={section.id}>
-                {renderSection()}
-              </div>
-            ) : null
+            // Handle standard sections
+            if (sectionRenderers[section.id]) {
+              return (
+                <div key={section.id}>
+                  {sectionRenderers[section.id]()}
+                </div>
+              )
+            }
+            
+            // Handle custom sections
+            if (section.id.startsWith('custom-')) {
+              return (
+                <div key={section.id}>
+                  {renderCustomSection(section.id)}
+                </div>
+              )
+            }
+            
+            return null
           })
         }
       </div>

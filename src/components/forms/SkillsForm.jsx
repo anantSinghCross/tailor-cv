@@ -60,13 +60,13 @@ const SkillsForm = ({ skills, onChange }) => {
             {skills.map((skill, index) => (
               <div 
                 key={index} 
-                className="flex items-center bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
+                className="shadow flex items-center bg-blue-50 border border-blue-200 text-blue-800 pl-3 rounded-full text-sm"
               >
                 {skill.name}
                 <button
                   type="button"
                   onClick={() => handleDeleteSkill(index)}
-                  className="ml-2 text-blue-600 hover:text-blue-800  -none"
+                  className="text-blue-600 hover:text-blue-800  -none"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -80,7 +80,7 @@ const SkillsForm = ({ skills, onChange }) => {
         )}
       </div>
       
-      <div className="bg-blue-50 p-4 rounded-lg">
+      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
         <h3 className="text-md font-medium text-blue-800 mb-2">Skill Tips</h3>
         <ul className="list-disc list-inside text-sm text-blue-700 space-y-1">
           <li>Include a mix of technical and soft skills</li>
