@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 const ExperienceForm = ({ experience, onChange }) => {
   const [editIndex, setEditIndex] = useState(-1)
+  const [draggedItem, setDraggedItem] = useState(null)
   const [currentExperience, setCurrentExperience] = useState({
     title: '',
     company: '',
@@ -52,6 +53,78 @@ const ExperienceForm = ({ experience, onChange }) => {
     onChange(updatedExperience)
   }
 
+  // Drag and drop handlers
+  const handleDragStart = (e, index) => {
+    setDraggedItem(index)
+    e.dataTransfer.effectAllowed = 'move'
+    // Create a ghost image that looks nicer
+    const ghostElement = e.target.cloneNode(true)
+    ghostElement.style.opacity = '0.8'
+    document.body.appendChild(ghostElement)
+    e.dataTransfer.setDragImage(ghostElement, 20, 20)
+    setTimeout(() => {
+      document.body.removeChild(ghostElement)
+    }, 0)
+  }
+  
+  const handleDragOver = (e, index) => {
+    e.preventDefault()
+    
+    // If it's the same item, do nothing
+    if (index === draggedItem) {
+      return
+    }
+    
+    // Add visual indication
+    e.currentTarget.style.borderTop = draggedItem < index 
+      ? '2px solid #60a5fa' 
+      : 'none'
+    e.currentTarget.style.borderBottom = draggedItem > index 
+      ? '2px solid #60a5fa' 
+      : 'none'
+  }
+  
+  const handleDragLeave = (e) => {
+    e.preventDefault()
+    e.currentTarget.style.borderTop = 'none'
+    e.currentTarget.style.borderBottom = 'none'
+  }
+  
+  const handleDrop = (e, dropIndex) => {
+    e.preventDefault()
+    e.currentTarget.style.borderTop = 'none'
+    e.currentTarget.style.borderBottom = 'none'
+    
+    // If it's the same item, do nothing
+    if (dropIndex === draggedItem) {
+      return
+    }
+    
+    // Create a copy of the experience array
+    const items = [...experience]
+    
+    // Remove the dragged item
+    const draggedItemValue = items[draggedItem]
+    items.splice(draggedItem, 1)
+    
+    // Insert it at the drop position
+    items.splice(dropIndex, 0, draggedItemValue)
+    
+    // Update the state
+    onChange(items)
+    setDraggedItem(null)
+  }
+  
+  const handleDragEnd = (e) => {
+    e.preventDefault()
+    // Reset borders on all items
+    document.querySelectorAll('.experience-item').forEach(item => {
+      item.style.borderTop = 'none'
+      item.style.borderBottom = 'none'
+    })
+    setDraggedItem(null)
+  }
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold text-gray-800">Work Experience</h2>
@@ -59,17 +132,38 @@ const ExperienceForm = ({ experience, onChange }) => {
       {/* Experience List */}
       {experience.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-700">Your Experience</h3>
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-medium text-gray-700">Your Experience</h3>
+            <p className="text-sm text-gray-500">Drag and drop to reorder</p>
+          </div>
+          
           {experience.map((exp, index) => (
-            <div key={index} className="bg-gray-50 p-4 rounded-lg">
+            <div 
+              key={index} 
+              className={`bg-gray-50 p-4 rounded-lg experience-item cursor-move ${
+                draggedItem === index ? 'opacity-50 border-2 border-blue-300' : ''
+              }`}
+              draggable
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleDrop(e, index)}
+              onDragEnd={handleDragEnd}
+            >
               <div className="flex justify-between items-start">
-                <div>
-                  <h4 className="font-medium text-gray-900">{exp.title}</h4>
-                  <p className="text-gray-700">{exp.company}</p>
-                  <p className="text-sm text-gray-600">
-                    {exp.startDate} - {exp.endDate || 'Present'}
-                  </p>
+                <div className="flex">
+                  <div className="text-gray-400 mr-2 flex items-center">
+                    <span className="cursor-move">☰</span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-900">{exp.title}</h4>
+                    <p className="text-gray-700">{exp.company}</p>
+                    <p className="text-sm text-gray-600">
+                      {exp.startDate} - {exp.endDate || 'Present'}
+                    </p>
+                  </div>
                 </div>
+                
                 <div className="flex space-x-2">
                   <button
                     type="button"
