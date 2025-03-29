@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react'
 import ResumeForm from './components/ResumeForm'
 import ResumePreview from './components/ResumePreview'
 import { generateResumePdf } from './utils/pdfUtils'
-import './App.css'
 
 // Default empty resume data
 const defaultResumeData = {
@@ -525,8 +524,8 @@ function App() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Section Type
               </label>
-              <div className="flex gap-4">
-                <label className="flex items-center">
+              <div className="flex flex-col justify-start border border-gray-200 rounded-md p-2 gap-2">
+                <label className="flex flex-1 p-3 rounded-md hover:bg-gray-100 items-center transition-all">
                   <input
                     type="radio"
                     name="sectionType"
@@ -540,7 +539,7 @@ function App() {
                     <div className="text-xs text-gray-500">Multiple items with titles (like Education, Work)</div>
                   </div>
                 </label>
-                <label className="flex items-center">
+                <label className="flex flex-1 p-3 rounded-md hover:bg-gray-100 items-center transition-all">
                   <input
                     type="radio"
                     name="sectionType"
@@ -570,7 +569,6 @@ function App() {
                 Cancel
               </button>
               <button
-                type="button"
                 onClick={handleAddCustomSection}
                 className="py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md"
               >

@@ -19,7 +19,7 @@ const ParagraphSectionForm = ({ sectionId, sectionData, onChange, onRemove }) =>
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex items-end justify-between mb-4">
         <div className="flex-1">
           <label htmlFor="section-title" className="block text-sm font-medium text-gray-700 mb-1">
             Section Title
@@ -36,7 +36,7 @@ const ParagraphSectionForm = ({ sectionId, sectionData, onChange, onRemove }) =>
         <button
           type="button"
           onClick={() => onRemove(sectionId)}
-          className="ml-4 text-red-500 hover:text-red-700 font-medium"
+          className="ml-4 bg-red-50 rounded-md text-red-500 font-medium"
         >
           Remove Section
         </button>

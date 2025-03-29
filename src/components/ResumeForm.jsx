@@ -79,7 +79,7 @@ const ResumeForm = ({
         </div>
         {/* Add Custom Section button */}
         <button
-          className="px-4 py-3 font-medium text-sm text-blue-500 hover:bg-blue-50 whitespace-nowrap ml-auto flex items-center"
+          className="px-4 py-3 rounded-md m-2 font-medium text-sm text-blue-500 hover:bg-blue-50 whitespace-nowrap ml-auto flex items-center"
           onClick={onAddCustomSection}
         >
           <span className="mr-1">+</span> Add Section
