@@ -59,13 +59,25 @@ const ResumePreview = forwardRef(({ resumeData, sectionOrder }, ref) => {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div>
                   <h3 style={{ fontWeight: '500', color: colors.gray900, margin: '0' }}>{exp.title}</h3>
-                  <p style={{ color: colors.gray700, margin: '0.125rem 0' }}>{exp.company}</p>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <p style={{ color: colors.gray700, margin: '0.125rem 0' }}>
+                      {exp.company}{exp.location ? `, ${exp.location}` : ''}
+                    </p>
+                    {exp.employmentType && (
+                      <span style={{ 
+                        color: colors.gray600, 
+                        fontStyle: 'italic', 
+                        fontSize: '0.875rem' 
+                      }}>
+                        • {exp.employmentType}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div style={{ fontSize: '0.875rem', color: colors.gray600 }}>
                   {exp.startDate} - {exp.endDate || 'Present'}
                 </div>
               </div>
-              <p style={{ fontSize: '0.875rem', color: colors.gray700, marginTop: '0.25rem' }}>{exp.location}</p>
               <ul style={{ 
                 listStyleType: 'disc', 
                 paddingLeft: '1.25rem', 

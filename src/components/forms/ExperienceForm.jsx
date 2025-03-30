@@ -9,8 +9,21 @@ const ExperienceForm = ({ experience, onChange }) => {
     location: '',
     startDate: '',
     endDate: '',
-    description: ''
+    description: '',
+    employmentType: 'Full-time'
   })
+
+  // Employment type options
+  const employmentTypes = [
+    'Full-time',
+    'Part-time',
+    'Contract',
+    'Internship',
+    'Freelance',
+    'Apprenticeship',
+    'Volunteer',
+    'Temporary'
+  ]
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -39,7 +52,8 @@ const ExperienceForm = ({ experience, onChange }) => {
       location: '',
       startDate: '',
       endDate: '',
-      description: ''
+      description: '',
+      employmentType: 'Full-time'
     })
   }
 
@@ -157,7 +171,14 @@ const ExperienceForm = ({ experience, onChange }) => {
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">{exp.title}</h4>
-                    <p className="text-gray-700">{exp.company}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-gray-700">{exp.company}</p>
+                      {exp.employmentType && (
+                        <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                          {exp.employmentType}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-sm text-gray-600">
                       {exp.startDate} - {exp.endDate || 'Present'}
                     </p>
@@ -225,19 +246,40 @@ const ExperienceForm = ({ experience, onChange }) => {
             </div>
           </div>
           
-          <div>
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
-              Location
-            </label>
-            <input
-              type="text"
-              id="location"
-              name="location"
-              value={currentExperience.location}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
-              placeholder="Mountain View, CA"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="employmentType" className="block text-sm font-medium text-gray-700 mb-1">
+                Employment Type
+              </label>
+              <select
+                id="employmentType"
+                name="employmentType"
+                value={currentExperience.employmentType}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
+              >
+                {employmentTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            <div>
+              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+                Location
+              </label>
+              <input
+                type="text"
+                id="location"
+                name="location"
+                value={currentExperience.location}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md  -none focus:ring-2 focus:ring-blue-500"
+                placeholder="Mountain View, CA"
+              />
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -304,7 +346,8 @@ const ExperienceForm = ({ experience, onChange }) => {
                     location: '',
                     startDate: '',
                     endDate: '',
-                    description: ''
+                    description: '',
+                    employmentType: 'Full-time'
                   })
                 }}
                 className="mr-2 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"

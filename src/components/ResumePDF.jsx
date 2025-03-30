@@ -119,6 +119,16 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
     fontSize: 8,
   },
+  companyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  employmentType: {
+    color: '#6B7280',
+    fontStyle: 'italic',
+    fontSize: 9,
+    marginLeft: 5,
+  },
 });
 
 // Resume PDF Component
@@ -199,7 +209,14 @@ const ResumePDF = ({ resumeData, sectionOrder }) => {
             <View style={styles.entryHeader}>
               <View>
                 <Text style={styles.entryTitle}>{safe(exp.title)}</Text>
-                <Text style={styles.entryCompany}>{safe(exp.company)}, {safe(exp.location)}</Text>
+                <View style={styles.companyContainer}>
+                  <Text style={styles.entryCompany}>
+                    {safe(exp.company)}{exp.location ? `, ${safe(exp.location)}` : ''}
+                  </Text>
+                  {exp.employmentType && (
+                    <Text style={styles.employmentType}>• {exp.employmentType}</Text>
+                  )}
+                </View>
               </View>
               <Text style={styles.entryDate}>
                 {safe(exp.startDate)} - {exp.endDate || 'Present'}
