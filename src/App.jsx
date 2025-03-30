@@ -12,6 +12,7 @@ const defaultResumeData = {
     phone: '',
     location: '',
     summary: '',
+    socialLinks: []
   },
   education: [],
   experience: [],

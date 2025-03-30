@@ -311,93 +311,86 @@ const ResumePreview = forwardRef(({ resumeData, sectionOrder }, ref) => {
   }
 
   return (
-    <div ref={ref} className="resume-container" style={{ maxWidth: '800px', margin: '0 auto' }}>
+    <div className="resume-container">
       <div 
-        className="resume-page"
+        ref={ref}
+        className="resume-page pdf-safe" 
         style={{ 
-          backgroundColor: colors.white,
-          padding: '2rem',
-          boxSizing: 'border-box',
-          fontFamily: 'system-ui, sans-serif',
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-          borderRadius: '0.5rem',
+          width: '8.5in', 
+          minHeight: '11in',
+          padding: '0.5in',
+          backgroundColor: colors.white
         }}
       >
-        {/* Header / Personal Info */}
-        <div style={{ marginBottom: '1.5rem' }}>
-          <h1 style={{ 
-            fontSize: '1.875rem', 
-            fontWeight: 'bold', 
-            color: colors.gray900,
-            margin: '0'
-          }}>
-            {personalInfo.name || 'Your Name'}
-          </h1>
-          <p style={{ 
-            fontSize: '1.25rem', 
-            color: colors.gray700,
-            marginTop: '0.25rem',
-            marginBottom: '0'
-          }}>
-            {personalInfo.title || 'Professional Title'}
-          </p>
-          
-          <div style={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
-            gap: '1rem', 
-            marginTop: '0.75rem',
-            fontSize: '0.875rem',
-            color: colors.gray600
-          }}>
-            {personalInfo.email && (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ marginRight: '0.25rem' }}>✉</span>
-                {personalInfo.email}
-              </div>
-            )}
+        {/* Personal Info Header */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+              <h1 style={{ 
+                fontSize: '1.75rem', 
+                fontWeight: '700', 
+                color: colors.gray900,
+                margin: '0 0 0.25rem 0'
+              }}>
+                {personalInfo.name || 'Your Name'}
+              </h1>
+              <p style={{ 
+                fontSize: '1.125rem', 
+                color: colors.gray700,
+                margin: '0 0 0.5rem 0'
+              }}>
+                {personalInfo.title || 'Professional Title'}
+              </p>
+            </div>
             
-            {personalInfo.phone && (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ marginRight: '0.25rem' }}>📞</span>
-                {personalInfo.phone}
-              </div>
-            )}
-            
-            {personalInfo.location && (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ marginRight: '0.25rem' }}>📍</span>
-                {personalInfo.location}
+            {/* Social Links */}
+            {personalInfo.socialLinks && personalInfo.socialLinks.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', alignItems: 'flex-end' }}>
+                {personalInfo.socialLinks.map((link, index) => (
+                  <a
+                    key={index}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ 
+                      color: colors.blue700,
+                      textDecoration: 'none',
+                      fontSize: '0.875rem',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <span style={{ marginRight: '0.25rem' }}>{link.platform}</span>
+                  </a>
+                ))}
               </div>
             )}
           </div>
+          
+          <div style={{ 
+            display: 'flex', 
+            gap: '1rem',
+            color: colors.gray600,
+            fontSize: '0.875rem'
+          }}>
+            {personalInfo.email && <span>{personalInfo.email}</span>}
+            {personalInfo.phone && <span>{personalInfo.phone}</span>}
+            {personalInfo.location && <span>{personalInfo.location}</span>}
+          </div>
         </div>
 
-        {/* Render sections based on order */}
-        {sectionOrder && sectionOrder
+        {/* Filtered and ordered sections */}
+        {sectionOrder
           .filter(section => section.visible)
           .map(section => {
-            // Handle standard sections
-            if (sectionRenderers[section.id]) {
-              return (
-                <div key={section.id}>
-                  {sectionRenderers[section.id]()}
-                </div>
-              )
-            }
-            
-            // Handle custom sections
+            // Handle both predefined and custom sections
             if (section.id.startsWith('custom-')) {
-              return (
-                <div key={section.id}>
-                  {renderCustomSection(section.id)}
-                </div>
-              )
+              return renderCustomSection(section.id);
             }
             
-            return null
-          })
-        }
+            const sectionRenderer = sectionRenderers[section.id];
+            return sectionRenderer ? sectionRenderer() : null;
+          })}
       </div>
     </div>
   )

@@ -128,8 +128,33 @@ const ResumePDF = ({ resumeData, sectionOrder }) => {
   // Render personal information section
   const renderPersonalInfo = () => (
     <View style={styles.header}>
-      <Text style={styles.name}>{safe(personalInfo.name)}</Text>
-      <Text style={styles.title}>{safe(personalInfo.title)}</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <View>
+          <Text style={styles.name}>{safe(personalInfo.name)}</Text>
+          <Text style={styles.title}>{safe(personalInfo.title)}</Text>
+        </View>
+        
+        {/* Social Links */}
+        {personalInfo.socialLinks && personalInfo.socialLinks.length > 0 && (
+          <View style={{ alignItems: 'flex-end' }}>
+            {personalInfo.socialLinks.map((link, index) => (
+              <Link 
+                key={index}
+                src={link.url}
+                style={{ 
+                  color: '#2563EB',
+                  fontSize: 9,
+                  marginBottom: 3,
+                  textDecoration: 'none'
+                }}
+              >
+                {link.platform}
+              </Link>
+            ))}
+          </View>
+        )}
+      </View>
+      
       <View style={styles.contactInfo}>
         {personalInfo.email && (
           <View style={styles.contactItem}>
